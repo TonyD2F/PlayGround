@@ -1,0 +1,7 @@
+{
+  "_comment": "fighter id -> GLB file in this folder (CC0 KayKit pack, see *.attribution.json). Unlisted fighters use built-in procedural models.",
+  "kaito": "Knight.glb",
+  "zara": "Mage.glb",
+  "max": "Barbarian.glb",
+  "luna": "Rogue.glb"
+}
