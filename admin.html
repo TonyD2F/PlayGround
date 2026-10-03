@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ToolPilot Admin — Command Center</title>
+<meta name="robots" content="noindex, nofollow" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css" />
+<link rel="stylesheet" href="admin.css" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛠️</text></svg>">
+</head>
+<body>
+<div class="bg-orbs" aria-hidden="true"><span class="orb orb-1"></span><span class="orb orb-2"></span></div>
+
+<!-- LOGIN GATE -->
+<div class="login-wrap" id="loginWrap">
+  <form class="login-card" id="loginForm">
+    <div class="login-ico">🛠️</div>
+    <h1>ToolPilot <span class="grad">Admin</span></h1>
+    <p class="muted">Restricted area. Enter your admin passcode.</p>
+    <input type="password" id="loginPass" placeholder="Passcode (default: admin123)" autocomplete="current-password" />
+    <button class="btn btn-primary btn-block" type="submit">Unlock dashboard →</button>
+    <small class="muted">Change it later in Settings → Security.</small>
+    <p class="login-err" id="loginErr" hidden>❌ Wrong passcode, try again.</p>
+  </form>
+</div>
+
+<div class="admin" id="adminApp" hidden>
+  <!-- SIDEBAR -->
+  <aside class="side">
+    <a class="logo" href="index.html">⚡ <span>Tool<b>Pilot</b></span> <em class="logo-badge">ADMIN</em></a>
+    <nav class="side-nav" id="sideNav">
+      <button data-tab="dashboard" class="active">📊 Dashboard</button>
+      <button data-tab="tools">🧰 Tools <span class="pill-n" id="navToolCount"></span></button>
+      <button data-tab="submissions">📥 Submissions <span class="pill-n warn" id="navPending"></span></button>
+      <button data-tab="featured">🔥 Featured</button>
+      <button data-tab="categories">📂 Categories</button>
+      <button data-tab="rag">🕷️ RAG & Crawler</button>
+      <button data-tab="appearance">🎨 Appearance</button>
+      <button data-tab="settings">⚙️ Settings</button>
+      <button data-tab="data">💾 Data & Logs</button>
+    </nav>
+    <div class="side-foot">
+      <a class="btn btn-ghost btn-block" href="index.html" target="_blank">🌐 View live site ↗</a>
+      <button class="btn btn-ghost btn-block" id="lockBtn">🔒 Lock panel</button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+    <header class="topbar">
+      <button class="hamburger" id="sideToggle" aria-label="Menu">☰</button>
+      <div><h2 id="tabTitle">Dashboard</h2><p class="muted" id="tabSub">Everything at a glance.</p></div>
+      <div class="top-actions">
+        <span class="env-badge" id="envBadge">🟢 Local RAG · no keys needed</span>
+        <button class="btn btn-primary" data-add-tool>＋ New tool</button>
+      </div>
+    </header>
+
+    <!-- DASHBOARD -->
+    <section class="tab" data-pane="dashboard">
+      <div class="kpis" id="kpis"></div>
+      <div class="grid-2">
+        <div class="panel"><h3>Tools per category</h3><div id="catBars" class="bars"></div></div>
+        <div class="panel"><h3>Pricing mix</h3><div id="priceBars" class="bars"></div>
+          <h3 style="margin-top:18px">Quick actions</h3>
+          <div class="qa">
+            <button class="btn btn-ghost" data-add-tool>＋ Add tool</button>
+            <button class="btn btn-ghost" data-goto="submissions">📥 Review queue</button>
+            <button class="btn btn-ghost" data-goto="rag">🕷️ Crawl new URL</button>
+            <button class="btn btn-ghost" data-goto="data">💾 Export backup</button>
+          </div></div>
+      </div>
+      <div class="panel"><h3>Recent activity</h3><div id="activityList" class="activity"></div></div>
+    </section>
+
+    <!-- TOOLS -->
+    <section class="tab" data-pane="tools" hidden>
+      <div class="toolbar">
+        <input id="toolSearch" placeholder="🔍 Search name, tagline, tag, URL…" />
+        <select id="toolCatFilter"><option value="all">All categories</option></select>
+        <select id="toolPriceFilter"><option value="all">All pricing</option><option>Free</option><option>Freemium</option><option>Paid</option></select>
+        <select id="toolSort"><option value="votes">Sort: votes</option><option value="rating">Sort: rating</option><option value="newest">Sort: newest</option><option value="az">Sort: A–Z</option></select>
+      </div>
+      <div class="bulkbar" id="bulkBar" hidden>
+        <span id="selCount">0 selected</span>
+        <button class="btn btn-ghost" data-bulk="feature">⭐ Feature</button>
+        <button class="btn btn-ghost" data-bulk="unfeature">☆ Unfeature</button>
+        <button class="btn btn-ghost" data-bulk="new">🆕 Mark new</button>
+        <button class="btn btn-ghost" data-bulk="export">⬇ Export</button>
+        <button class="btn btn-danger" data-bulk="delete">🗑 Delete</button>
+      </div>
+      <div class="table-wrap"><table class="table" id="toolTable">
+        <thead><tr><th><input type="checkbox" id="selAll" /></th><th>Tool</th><th>Category</th><th>Pricing</th><th>★</th><th>▲ Votes</th><th>Flags</th><th>Actions</th></tr></thead>
+        <tbody></tbody>
+      </table></div>
+      <div class="pager"><button class="btn btn-ghost" id="toolPrev">← Prev</button><span id="toolPageInfo" class="muted"></span><button class="btn btn-ghost" id="toolNext">Next →</button></div>
+    </section>
+
+    <!-- SUBMISSIONS -->
+    <section class="tab" data-pane="submissions" hidden>
+      <div class="panel"><h3>⏳ Pending review <span class="pill-n warn" id="pendCount"></span></h3>
+        <p class="muted">New community submissions land here when <b>Moderation = manual</b> (Settings → General). Approve to publish, edit first if needed.</p>
+        <div id="pendingList" class="sub-list"></div></div>
+      <div class="grid-2">
+        <div class="panel"><h3>✅ Approved</h3><div id="approvedList" class="sub-list small"></div></div>
+        <div class="panel"><h3>🚫 Rejected</h3><div id="rejectedList" class="sub-list small"></div></div>
+      </div>
+    </section>
+
+    <!-- FEATURED -->
+    <section class="tab" data-pane="featured" hidden>
+      <div class="panel"><h3>🔥 Featured rail <small class="muted" id="featInfo"></small></h3>
+        <p class="muted">Order controls the homepage rail (top → left). Toggle stars to add/remove.</p>
+        <div id="featList" class="feat-admin"></div></div>
+      <div class="panel"><h3>⭐ All tools — feature toggles</h3><div id="featAll" class="feat-admin"></div></div>
+    </section>
+
+    <!-- CATEGORIES -->
+    <section class="tab" data-pane="categories" hidden>
+      <div class="panel"><h3>📂 Categories</h3>
+        <div id="catList" class="cat-admin"></div>
+        <form id="catForm" class="inline-form">
+          <input id="catEmoji" placeholder="🆕" maxlength="4" required />
+          <input id="catName" placeholder="Category name" required />
+          <input id="catId" placeholder="id (auto)" />
+          <button class="btn btn-primary" type="submit">Add category</button>
+          <button class="btn btn-ghost" type="button" id="catReset">Reset defaults</button>
+        </form></div>
+    </section>
+
+    <!-- RAG -->
+    <section class="tab" data-pane="rag" hidden>
+      <div class="kpis" id="ragKpis"></div>
+      <div class="grid-2">
+        <div class="panel"><h3>🕷️ Crawl controls <small class="muted">(mcp-crawl4ai-rag)</small></h3>
+          <p class="muted">Upstream repo is vendored at <code>rag/upstream</code> with its venv at <code>rag/.venv</code>. Run these on your machine / server:</p>
+          <div class="cmd"><code>rag/.venv/bin/python rag/crawl.py --seed</code><button class="btn btn-ghost" data-copy="rag/.venv/bin/python rag/crawl.py --seed">Copy</button></div>
+          <div class="cmd"><code>rag/.venv/bin/python rag/crawl.py --url https://example.com</code><button class="btn btn-ghost" data-copy="rag/.venv/bin/python rag/crawl.py --url https://example.com">Copy</button></div>
+          <div class="cmd"><code>rag/.venv/bin/python -m pytest rag/upstream -q</code><button class="btn btn-ghost" data-copy="rag/.venv/bin/python -m pytest rag/upstream -q">Copy</button></div>
+          <form id="queueForm" class="inline-form"><input id="queueUrl" type="url" required placeholder="https://… — queue URL to crawl" /><button class="btn btn-primary" type="submit">＋ Queue</button></form>
+          <div id="queueList" class="queue"></div>
+          <h3 style="margin-top:16px">📚 Indexed sources</h3><div id="sourceList" class="queue"></div>
+        </div>
+        <div class="panel"><h3>⚙️ RAG strategy <small class="muted">(mirrors upstream .env)</small></h3>
+          <form id="ragForm" class="form">
+            <label class="check"><input type="checkbox" name="hybrid" /> Hybrid search <small>vector + keyword (recommended ON)</small></label>
+            <label class="check"><input type="checkbox" name="rerank" /> Reranking <small>cross-encoder re-order (recommended ON)</small></label>
+            <label class="check"><input type="checkbox" name="contextual" /> Contextual embeddings <small>needs MODEL_CHOICE + OpenAI key</small></label>
+            <label class="check"><input type="checkbox" name="agentic" /> Agentic RAG <small>code-example extraction</small></label>
+            <div class="frow"><div><label>Chunk size</label><input type="number" name="chunk" min="500" max="4000" step="100" /></div>
+            <div><label>Top-K results</label><input type="number" name="topK" min="1" max="20" /></div></div>
+            <button class="btn btn-primary" type="submit">Save RAG settings</button>
+          </form>
+          <h3 style="margin-top:16px">🔎 Test retrieval (local TF-IDF)</h3>
+          <form id="ragTestForm" class="inline-form"><input id="ragTestQ" placeholder="e.g. best avatar video maker" required /><button class="btn btn-ghost" type="submit">Search</button></form>
+          <div id="ragTestOut" class="queue"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- APPEARANCE -->
+    <section class="tab" data-pane="appearance" hidden>
+      <form id="appearForm" class="form panel">
+        <h3>🎨 Appearance</h3>
+        <label class="check"><input type="checkbox" name="showAnnouncement" /> Show announcement bar</label>
+        <label>Announcement HTML</label><textarea name="announcement" rows="2"></textarea>
+        <label>Hero pill</label><input name="heroPill" />
+        <label>Hero title (HTML allowed)</label><textarea name="heroTitle" rows="2"></textarea>
+        <label>Hero subtitle (HTML allowed)</label><textarea name="heroSub" rows="2"></textarea>
+        <div class="frow"><div><label>Default theme</label><select name="theme"><option value="dark">Dark</option><option value="light">Light</option></select></div>
+        <div><label>Default sort</label><select name="defaultSort"><option value="popular">Most upvoted</option><option value="rating">Highest rated</option><option value="newest">Newest</option><option value="az">A – Z</option></select></div></div>
+        <div class="frow"><div><label>Featured rail limit</label><input type="number" name="featuredLimit" min="1" max="24" /></div>
+        <div><label>Grid page size</label><input type="number" name="itemsPerPage" min="3" max="48" /></div></div>
+        <button class="btn btn-primary" type="submit">Save appearance</button>
+        <a class="btn btn-ghost" href="index.html" target="_blank">Preview live site ↗</a>
+      </form>
+    </section>
+
+    <!-- SETTINGS -->
+    <section class="tab" data-pane="settings" hidden>
+      <form id="generalForm" class="form panel"><h3>⚙️ General</h3>
+        <div class="frow"><div><label>Moderation</label><select name="moderation"><option value="auto">Auto-publish submissions</option><option value="manual">Manual review queue</option></select></div>
+        <div><label>Change admin passcode</label><input name="adminPass" placeholder="New passcode (blank = keep)" /></div></div>
+        <button class="btn btn-primary" type="submit">Save settings</button>
+      </form>
+      <div class="panel danger"><h3>☠️ Danger zone</h3>
+        <div class="qa">
+          <button class="btn btn-ghost" id="resetVotes">Reset all votes</button>
+          <button class="btn btn-ghost" id="clearSaved">Clear saved/bookmarks</button>
+          <button class="btn btn-danger" id="wipeOverlays">Discard admin edits</button>
+          <button class="btn btn-danger" id="factoryReset">🏭 Factory reset everything</button>
+        </div></div>
+    </section>
+
+    <!-- DATA -->
+    <section class="tab" data-pane="data" hidden>
+      <div class="grid-2">
+        <div class="panel"><h3>💾 Backup & restore</h3>
+          <div class="qa">
+            <button class="btn btn-primary" id="exportAll">⬇ Export full backup (JSON)</button>
+            <button class="btn btn-ghost" id="exportTools">⬇ Export tools only</button>
+            <label class="btn btn-ghost">⬆ Import backup <input type="file" id="importFile" accept="application/json" hidden /></label>
+          </div>
+          <p class="muted">Backup includes tools, overrides, categories, settings, votes & activity.</p></div>
+        <div class="panel"><h3>🧾 MCP config <small class="muted">(rag/mcp.json)</small></h3>
+          <pre class="code" id="mcpPreview"></pre>
+          <button class="btn btn-ghost" id="copyMcp">Copy MCP snippet</button></div>
+      </div>
+      <div class="panel"><h3>📜 Activity log</h3><div id="activityFull" class="activity"></div>
+        <button class="btn btn-ghost" id="clearLog">Clear log</button></div>
+    </section>
+  </main>
+</div>
+
+<!-- TOOL EDITOR MODAL -->
+<div class="overlay" id="edOverlay" hidden>
+  <div class="modal" role="dialog" aria-modal="true">
+    <button class="modal-x" id="edClose">✕</button>
+    <h2 id="edTitle">New tool</h2>
+    <form id="edForm" class="form">
+      <input type="hidden" name="id" />
+      <div class="frow"><div><label>Name *</label><input name="name" required /></div>
+      <div><label>URL *</label><input name="url" type="url" required placeholder="https://" /></div></div>
+      <label>Tagline *</label><input name="tagline" required maxlength="90" />
+      <label>Description *</label><textarea name="description" rows="3" required></textarea>
+      <div class="frow"><div><label>Category *</label><select name="category" id="edCat"></select></div>
+      <div><label>Pricing *</label><select name="pricing"><option>Free</option><option>Freemium</option><option>Paid</option></select></div></div>
+      <div class="frow"><div><label>Rating (0–5)</label><input name="rating" type="number" min="0" max="5" step="0.1" /></div>
+      <div><label>Votes</label><input name="votes" type="number" min="0" step="1" /></div></div>
+      <div class="frow"><div><label>Emoji</label><input name="emoji" maxlength="4" /></div>
+      <div><label>Date</label><input name="date" type="date" /></div></div>
+      <label>Tags (comma separated)</label><input name="tags" />
+      <label class="check"><input type="checkbox" name="featured" /> 🔥 Featured</label>
+      <label class="check"><input type="checkbox" name="isNew" /> 🆕 NEW badge</label>
+      <button class="btn btn-primary btn-block" type="submit">Save tool</button>
+    </form>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="data.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>

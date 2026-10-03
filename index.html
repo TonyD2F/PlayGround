@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ToolPilot — Discover Every AI Tool</title>
+<meta name="description" content="ToolPilot is the fastest AI tools directory. Search, compare and discover 2,400+ AI tools for writing, image, video, code, marketing and more." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+</head>
+<body>
+<div class="bg-orbs" aria-hidden="true"><span class="orb orb-1"></span><span class="orb orb-2"></span><span class="orb orb-3"></span></div>
+
+<div class="announce">✨ <strong>2,431 tools indexed</strong> — 18 added this week · <a href="#submit" id="announceSubmit">Submit your tool →</a></div>
+
+<header class="header" id="top">
+  <div class="wrap header-inner">
+    <a class="logo" href="#top">⚡ <span>Tool<b>Pilot</b></span> <em class="logo-badge">BETA</em></a>
+    <nav class="nav">
+      <a href="#discover" class="active">Discover</a>
+      <a href="#categories">Categories</a>
+      <a href="#featured">Featured</a>
+      <a href="#about">About</a>
+    </nav>
+    <div class="header-actions">
+      <button class="icon-btn" id="savedBtn" title="Saved tools">🔖 <span class="count-bubble" id="savedCount">0</span></button>
+      <button class="btn btn-ghost" id="themeBtn" title="Toggle theme">🌙</button>
+      <button class="btn btn-primary" data-open-submit>+ Submit Tool</button>
+    </div>
+    <button class="hamburger" id="hamburger" aria-label="Menu">☰</button>
+  </div>
+  <div class="mobile-nav" id="mobileNav">
+    <a href="#discover">Discover</a><a href="#categories">Categories</a><a href="#featured">Featured</a><a href="#about">About</a>
+    <button class="btn btn-primary" data-open-submit>+ Submit Tool</button>
+  </div>
+</header>
+
+<main>
+<!-- HERO -->
+<section class="hero wrap">
+  <div class="hero-pill">🚀 The #1 AI tools directory · Updated daily</div>
+  <h1>There's an AI for <span class="grad">that.</span><br/>Find it in seconds.</h1>
+  <p class="sub">Search <strong id="toolCountHero">2,431</strong> AI tools for writing, images, video, code, voice, marketing & more. Compare pricing, reviews and alternatives — no signup needed.</p>
+
+  <div class="search-big">
+    <span class="search-ico">🔍</span>
+    <input id="searchInput" type="text" placeholder="Try &quot;AI video editor&quot;, &quot;coding assistant&quot;, &quot;voice cloning&quot;…" autocomplete="off" />
+    <button class="btn btn-primary" id="searchBtn">Search</button>
+    <div class="search-suggest" id="searchSuggest"></div>
+  </div>
+  <div class="quick-tags" id="quickTags"></div>
+
+  <div class="stats">
+    <div class="stat"><strong data-count="2431">0</strong><span>AI tools listed</span></div>
+    <div class="stat"><strong data-count="56">0</strong><span>categories</span></div>
+    <div class="stat"><strong data-count="189000">0</strong><span>monthly hunters</span></div>
+    <div class="stat"><strong>4.8★</strong><span>avg. rated tools</span></div>
+  </div>
+</section>
+
+<!-- CATEGORIES -->
+<section class="wrap section" id="categories">
+  <div class="section-head">
+    <h2>Browse by category</h2>
+    <a href="#discover" class="link" id="viewAllCats">View all tools →</a>
+  </div>
+  <div class="cat-grid" id="catGrid"></div>
+</section>
+
+<!-- FEATURED -->
+<section class="wrap section" id="featured">
+  <div class="section-head">
+    <h2>🔥 Featured & trending this week</h2>
+    <div class="feat-nav"><button class="icon-btn" id="featPrev">←</button><button class="icon-btn" id="featNext">→</button></div>
+  </div>
+  <div class="feat-row" id="featRow"></div>
+</section>
+
+<!-- DISCOVER -->
+<section class="wrap section" id="discover">
+  <div class="section-head">
+    <h2 id="resultsTitle">Discover all tools</h2>
+    <span class="results-meta" id="resultsMeta"></span>
+  </div>
+
+  <div class="toolbar">
+    <div class="pills" id="pricingPills">
+      <button class="pill active" data-pricing="all">All pricing</button>
+      <button class="pill" data-pricing="Free">🆓 Free</button>
+      <button class="pill" data-pricing="Freemium">✨ Freemium</button>
+      <button class="pill" data-pricing="Paid">💎 Paid</button>
+    </div>
+    <div class="toolbar-right">
+      <div class="cat-select-wrap">📂 <select id="categorySelect"><option value="all">All categories</option></select></div>
+      <select id="sortSelect">
+        <option value="popular">⬆ Most upvoted</option>
+        <option value="rating">⭐ Highest rated</option>
+        <option value="newest">🆕 Newest</option>
+        <option value="az">🔤 A – Z</option>
+      </select>
+      <button class="icon-btn" id="savedToggle" title="Show saved only">🔖</button>
+    </div>
+  </div>
+
+  <div class="chips" id="activeChips"></div>
+  <div class="grid" id="toolGrid"></div>
+  <div class="empty" id="emptyState" hidden>
+    <div class="empty-emoji">🛸</div>
+    <h3>No tools found</h3>
+    <p>Try a different keyword — or be the first to submit it.</p>
+    <button class="btn btn-primary" data-open-submit>+ Submit this tool</button>
+    <button class="btn btn-ghost" id="resetFilters">Reset filters</button>
+  </div>
+  <div class="load-more-wrap"><button class="btn btn-ghost" id="loadMore">Load more tools</button></div>
+</section>
+
+<!-- SUBMIT CTA -->
+<section class="wrap section" id="submit">
+  <div class="cta-card">
+    <div>
+      <h2>Built an AI tool? Get 50k eyeballs. 👀</h2>
+      <p>Submit in 60 seconds. Free listing, instant review, dofollow backlink. Featured spots go out every Monday.</p>
+      <div class="cta-row">
+        <button class="btn btn-primary" data-open-submit>Submit your tool — it's free</button>
+        <span class="cta-note">✓ Free &nbsp; ✓ 24h review &nbsp; ✓ No account needed</span>
+      </div>
+    </div>
+    <div class="cta-art">🚀<span>★ 4.9 from 2,100+ makers</span></div>
+  </div>
+</section>
+
+<!-- NEWSLETTER / ABOUT -->
+<section class="wrap section grid-2" id="about">
+  <div class="panel">
+    <h3>📬 The AI Drop — weekly, no spam</h3>
+    <p>5 new tools, 2 workflows, 1 money-making tactic. Read by 48,000 founders.</p>
+    <form id="newsForm" class="news-form"><input type="email" id="newsEmail" placeholder="you@company.com" required /><button class="btn btn-primary" type="submit">Join free</button></form>
+    <small id="newsMsg">Join 48,213 subscribers · Unsubscribe anytime</small>
+  </div>
+  <div class="panel">
+    <h3>Why ToolPilot?</h3>
+    <p class="muted">We're an independent directory like <em>theresanaiforthat</em> & <em>futuretools</em> — but faster, cleaner, and human-curated. Every listing is tested. No pay-to-rank. Badges are earned by votes, not wallets.</p>
+    <div class="mini-stats"><span>⚡ 90ms search</span><span>🛡 Human reviewed</span><span>💬 Real user votes</span></div>
+  </div>
+</section>
+</main>
+
+<footer class="footer">
+  <div class="wrap foot-grid">
+    <div><a class="logo" href="#top">⚡ <span>Tool<b>Pilot</b></span></a><p class="muted">Every AI tool, one directory.<br/>Made for builders, by builders.</p></div>
+    <div><h4>Discover</h4><a href="#featured">Featured</a><a href="#discover">New tools</a><a href="#categories">Categories</a><a href="#submit">Advertise</a></div>
+    <div><h4>Top categories</h4><span id="footCats"></span></div>
+    <div><h4>Company</h4><a href="#about">About</a><a href="#submit">Submit tool</a><a href="admin.html">🛠️ Admin</a><a href="#top">Privacy · Terms</a></div>
+  </div>
+  <div class="wrap foot-base"><span>© 2026 ToolPilot · Demo directory UI</span><span>Made with ⚡ + ☕</span></div>
+</footer>
+
+<!-- TOOL MODAL -->
+<div class="overlay" id="toolOverlay" hidden>
+  <div class="modal" role="dialog" aria-modal="true">
+    <button class="modal-x" id="toolClose">✕</button>
+    <div id="toolModalBody"></div>
+  </div>
+</div>
+
+<!-- SUBMIT MODAL -->
+<div class="overlay" id="submitOverlay" hidden>
+  <div class="modal" role="dialog" aria-modal="true">
+    <button class="modal-x" data-close-submit>✕</button>
+    <h2>Submit your AI tool 🚀</h2>
+    <p class="muted">Free listing · reviewed within 24h · live instantly as “Community pick”.</p>
+    <form id="submitForm" class="form">
+      <div class="frow"><div><label>Tool name *</label><input name="name" required placeholder="e.g. Promptly" /></div>
+      <div><label>Website URL *</label><input name="url" required type="url" placeholder="https://" /></div></div>
+      <label>Tagline * <small>(max 80 chars)</small></label><input name="tagline" required maxlength="80" placeholder="What does it do in one line?" />
+      <label>Description *</label><textarea name="description" required rows="3" placeholder="Who is it for? What makes it special?"></textarea>
+      <div class="frow"><div><label>Category *</label><select name="category" id="submitCat"></select></div>
+      <div><label>Pricing *</label><select name="pricing"><option>Free</option><option selected>Freemium</option><option>Paid</option></select></div></div>
+      <label>Tags <small>(comma separated)</small></label><input name="tags" placeholder="writing, seo, chrome-extension" />
+      <button class="btn btn-primary btn-block" type="submit">Submit for review →</button>
+    </form>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
