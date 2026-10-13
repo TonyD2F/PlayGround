@@ -1,0 +1,4 @@
+interface:
+  display_name: "Load Sketchfab in 3D Engines"
+  short_description: "Verify Sketchfab GLBs, materials, and animation"
+  default_prompt: "Use $load-sketchfab-threejs to find a lightweight Sketchfab GLB and verify its materials and animation in Three.js and PlayCanvas."

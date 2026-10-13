@@ -1,0 +1,4 @@
+interface:
+  display_name: "OpenCode Zen Completions"
+  short_description: "Use OpenCode Zen chat completions for implementation work"
+  default_prompt: "Use the OpenCode Zen completions API when an implementation needs an external model completion."

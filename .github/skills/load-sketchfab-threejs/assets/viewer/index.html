@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sketchfab GLB material A/B</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.184.0/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.184.0/examples/jsm/"
+        }
+      }
+    </script>
+  </head>
+  <body data-compare-state="loading">
+    <header>
+      <div>
+        <p class="eyebrow">Sketchfab GLB · original materials</p>
+        <h1 id="model-name">Loading model…</h1>
+        <p id="attribution">Reading attribution…</p>
+      </div>
+      <div class="summary-stack">
+        <div id="summary" class="summary">A/B loading…</div>
+        <div id="validation-summary" class="validation-summary">Validation loading…</div>
+      </div>
+    </header>
+
+    <div class="animation-controls" id="animation-controls" hidden>
+      <label>
+        <span>Animation clip</span>
+        <select id="animation-select" aria-label="Animation clip"></select>
+      </label>
+      <button id="animation-toggle" type="button">Pause</button>
+      <label class="scrub-label">
+        <span>Timeline</span>
+        <input id="animation-scrub" type="range" min="0" max="1" step="0.001" value="0" />
+      </label>
+      <output id="animation-output">0.00s</output>
+      <span id="animation-shape-counts"></span>
+    </div>
+
+    <main>
+      <section class="panel reference-panel">
+        <div class="panel-heading">
+          <div><span class="label">Reference</span><strong>Sketchfab thumbnail</strong></div>
+          <span class="engine-state" id="reference-state">Loading</span>
+        </div>
+        <div class="viewport reference-viewport">
+          <img id="reference-image" alt="Sketchfab reference thumbnail" />
+        </div>
+        <p class="metric-row">Use color, texture placement, opacity, and material response as the visual baseline.</p>
+      </section>
+
+      <section class="panel" data-engine="three">
+        <div class="panel-heading">
+          <div><span class="label">A</span><strong>Three.js GLTFLoader</strong></div>
+          <span class="engine-state" id="three-state">Loading</span>
+        </div>
+        <div class="viewport"><canvas id="three-canvas" aria-label="Three.js GLB viewer"></canvas></div>
+        <dl class="metrics">
+          <div><dt>Load</dt><dd id="three-load">—</dd></div>
+          <div><dt>FPS</dt><dd id="three-fps">—</dd></div>
+          <div><dt>Draws</dt><dd id="three-draws">—</dd></div>
+          <div><dt>Meshes</dt><dd id="three-meshes">—</dd></div>
+          <div><dt>Triangles</dt><dd id="three-triangles">—</dd></div>
+          <div><dt>Materials</dt><dd id="three-materials">—</dd></div>
+          <div><dt>Clip</dt><dd id="three-animation">None</dd></div>
+          <div><dt>Anim time</dt><dd id="three-animation-time">—</dd></div>
+        </dl>
+        <p class="error" id="three-error" role="alert"></p>
+      </section>
+
+    </main>
+
+    <footer>
+      The Three.js viewer uses the same GLB, first animation clip, neutral procedural environment, ACES tone mapping, 1× pixel ratio, camera framing, and no fog.
+    </footer>
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>
